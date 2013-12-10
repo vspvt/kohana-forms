@@ -1,8 +1,8 @@
 <?php defined('SYSPATH') or die('No direct script access.');
+
 /**
  * @author: Vad Skakov <vad.skakov@gmail.com>
  */
-
 class Kohana_Form_Processor
 {
 	protected $request;
@@ -26,7 +26,7 @@ class Kohana_Form_Processor
 	 */
 	static function factory($initalValues = NULL, $validationMessages = TRUE, array $fields = NULL)
 	{
-		return new self($initalValues, $validationMessages, $fields);
+		return new static($initalValues, $validationMessages, $fields);
 	}
 
 	/**

@@ -1,9 +1,10 @@
 <?php defined('SYSPATH') or die('No direct script access.');
+
 /**
  * @author: Vad Skakov <vad.skakov@gmail.com>
  */
-  
-class Kohana_Form_Field {
+class Kohana_Form_Field
+{
 	const HIDDEN = 'hidden';
 	const INPUT = 'input';
 	const PASSWORD = 'password';
@@ -74,18 +75,19 @@ class Kohana_Form_Field {
 	private $initial_value_is_set;
 
 	/**
-	 * @param $name
+	 * @param            $name
 	 * @param array|null $data
 	 * @param array|null $defaults
+	 *
 	 * @throw Kohana_Exception
 	 * @return Form_Field
 	 */
-	static function factory($name, array $data=NULL, $defaults=NULL)
+	static function factory($name, array $data = NULL, $defaults = NULL)
 	{
-		return new self($name, $data, $defaults);
+		return new static($name, $data, $defaults);
 	}
 
-	function __construct($name, $data=NULL, $defaults=NULL)
+	function __construct($name, $data = NULL, $defaults = NULL)
 	{
 		$this->initial_value_is_set = FALSE;
 		$this->defaults_is_set = FALSE;
@@ -120,6 +122,7 @@ class Kohana_Form_Field {
 
 	/**
 	 * @param $key
+	 *
 	 * @return bool
 	 */
 	public function allowedDefault($key)
@@ -129,23 +132,26 @@ class Kohana_Form_Field {
 
 	/**
 	 * @param null|array $defaults
+	 *
 	 * @return Form_Field
 	 */
-	public function setDefaults($defaults=NULL)
+	public function setDefaults($defaults = NULL)
 	{
 		if (is_array($defaults)) {
-			foreach ($defaults as $key=>$value) {
+			foreach ($defaults as $key => $value) {
 				if ($this->allowedDefault($key)) $this->{$key} = $value;
 			}
 		}
+
 		return $this;
 	}
 
 	/**
 	 * @param array $data
+	 *
 	 * @return Form_Field
 	 */
-	protected function fillData(array $data=NULL)
+	protected function fillData(array $data = NULL)
 	{
 		if (NULL === $data) $data = array();
 		$this->setType(Arr::get($data, self::KEY_TYPE, self::HIDDEN));
@@ -160,6 +166,7 @@ class Kohana_Form_Field {
 		$this->setRules(Arr::get($data, self::KEY_RULES));
 		$this->setCheckedValue(Arr::get($data, self::KEY_CHECKED_VALUE));
 		$this->setSelectOptions(Arr::get($data, self::KEY_SELECT_OPTIONS));
+
 		return $this;
 	}
 
@@ -173,6 +180,7 @@ class Kohana_Form_Field {
 
 	/**
 	 * @param null $value
+	 *
 	 * @throws Kohana_Exception
 	 * @return Form_Field
 	 */
@@ -186,9 +194,10 @@ class Kohana_Form_Field {
 			self::PASSWORD,
 			self::SELECT,
 			self::TEXTAREA,
-		])) throw new Kohana_Exception('Unknown field type [:type] on field [:field]', [
-			':type'=> (NULL === $value ? 'NULL' : $value),
-			':field'=>$this->_name,
+		])
+		) throw new Kohana_Exception('Unknown field type [:type] on field [:field]', [
+			':type' => (NULL === $value ? 'NULL' : $value),
+			':field' => $this->_name,
 		]);
 
 		if (in_array($value, [self::PASSWORD])) {
@@ -196,67 +205,68 @@ class Kohana_Form_Field {
 		}
 
 		$this->_type = $value;
+
 		return $this;
 	}
 
 	/**
-	 * @param bool $required
+	 * @param bool        $required
 	 * @param null|string $className
+	 *
 	 * @throws Kohana_Exception
 	 * @return Form_Field
 	 */
-	public function setType_Input($required=FALSE, $className=NULL)
+	public function setType_Input($required = FALSE, $className = NULL)
 	{
 		return $this
 			->setType(self::INPUT)
 			->setRequired($required)
-			->setClass($className)
-		;
+			->setClass($className);
 	}
 
 	/**
 	 * @param int $checked_value
 	 * @param int $unchecked_value
+	 *
 	 * @throws Kohana_Exception
 	 * @return Form_Field
 	 */
-	public function setType_Checkbox($checked_value=1, $unchecked_value=0)
+	public function setType_Checkbox($checked_value = 1, $unchecked_value = 0)
 	{
 		return $this
 			->setType(self::CHECKBOX)
-			->setCheckedValue($checked_value, $unchecked_value)
-		;
+			->setCheckedValue($checked_value, $unchecked_value);
 	}
 
 	/**
 	 * @param bool $required
-	 * @param int $max_length
+	 * @param int  $max_length
+	 *
 	 * @throws Kohana_Exception
 	 * @return Form_Field
 	 */
-	public function setType_Email($required=FALSE, $max_length=254)
+	public function setType_Email($required = FALSE, $max_length = 254)
 	{
 		return $this
 			->setType(self::INPUT)
 			->setRequired($required)
-			->addRule_Email($max_length)
-		;
+			->addRule_Email($max_length);
 	}
 
 	/**
 	 * @param bool $required
-	 * @param int $min_length
-	 * @param int $max_length
+	 * @param int  $min_length
+	 * @param int  $max_length
+	 *
 	 * @throws Kohana_Exception
 	 * @return Form_Field
 	 */
-	public function setType_Password($required=FALSE, $min_length=6, $max_length=32)
+	public function setType_Password($required = FALSE, $min_length = 6, $max_length = 32)
 	{
 		return $this
 			->setType(self::PASSWORD)
 			->setRequired($required)
-			->addRule_Password($min_length, $max_length)
-		;
+			->addRule_Password($min_length, $max_length);
 	}
 
 	/**
@@ -269,11 +279,13 @@ class Kohana_Form_Field {
 
 	/**
 	 * @param null $value
+	 *
 	 * @return Form_Field
 	 */
-	public function setID($value=NULL)
+	public function setID($value = NULL)
 	{
 		$this->_id = $value;
+
 		return $this;
 	}
 
@@ -282,26 +294,29 @@ class Kohana_Form_Field {
 	 */
 	public function getID()
 	{
-		return NULL === $this->_id ? 'field_'.$this->_name : $this->_id;
+		return NULL === $this->_id ? 'field_' . $this->_name : $this->_id;
 	}
 
 	/**
 	 * @param null $text
 	 * @param null $class
+	 *
 	 * @return Form_Field
 	 */
-	public function setLabel($text=NULL, $class=NULL)
+	public function setLabel($text = NULL, $class = NULL)
 	{
 		return $this->setLabelText($text)->setLabelClass($class);
 	}
 
 	/**
 	 * @param null $value
+	 *
 	 * @return Form_Field
 	 */
-	public function setLabelText($value=NULL)
+	public function setLabelText($value = NULL)
 	{
 		$this->_label_text = $value;
+
 		return $this;
 	}
 
@@ -315,11 +330,13 @@ class Kohana_Form_Field {
 
 	/**
 	 * @param null $value
+	 *
 	 * @return Form_Field
 	 */
-	public function setLabelClass($value=NULL)
+	public function setLabelClass($value = NULL)
 	{
 		$this->_label_class = $value;
+
 		return $this;
 	}
 
@@ -332,18 +349,20 @@ class Kohana_Form_Field {
 	}
 
 	/**
-	 * @param $value
+	 * @param      $value
 	 * @param null $position
 	 * @param null $html
 	 * @param null $delim
+	 *
 	 * @return Form_Field
 	 */
-	public function setRequired($value, $position=NULL, $html=NULL, $delim=NULL)
+	public function setRequired($value, $position = NULL, $html = NULL, $delim = NULL)
 	{
 		$this->_required = $value;
 		$this->_required_position = $position;
 		$this->_required_html = $html;
 		$this->_required_delim = $delim;
+
 		return $this;
 	}
 
@@ -382,11 +401,13 @@ class Kohana_Form_Field {
 	/**
 	 * @param null $error
 	 * @param bool $returnError
+	 *
 	 * @return Form_Field|mixed
 	 */
-	public function setError($error=NULL, $returnError=FALSE)
+	public function setError($error = NULL, $returnError = FALSE)
 	{
 		$this->_error = $error;
+
 		return $returnError ? $this->getError() : $this;
 	}
 
@@ -409,9 +430,10 @@ class Kohana_Form_Field {
 	/**
 	 * @param null $value
 	 * @param bool $overwrite
+	 *
 	 * @return Form_Field
 	 */
-	public function setInitialValue($value=NULL, $overwrite=TRUE)
+	public function setInitialValue($value = NULL, $overwrite = TRUE)
 	{
 		if (!$this->initial_value_is_set || $overwrite) {
 			if ($this->_type === self::CHECKBOX && NULL !== $this->_unchecked_value && NULL === $value) $value = $this->_unchecked_value;
@@ -419,6 +441,7 @@ class Kohana_Form_Field {
 			$this->_initial_value = NULL !== $value ? (string) $value : NULL;
 		}
 		$this->initial_value_is_set = TRUE;
+
 		return $this;
 	}
 
@@ -428,11 +451,11 @@ class Kohana_Form_Field {
 	public function getInitialValue()
 	{
 		return $this->_initial_value;
-/*
-		$value = $this->_initial_value;
-		$opts = is_array($this->_select_options) ? array_keys($this->_select_options) : NULL;
-		return $this->_type == self::SELECT && (!$this->isSetInitialValue() || NULL === $value) && NULL !== $opts ? (string) reset($opts) : $value;
-*/
+		/*
+				$value = $this->_initial_value;
+				$opts = is_array($this->_select_options) ? array_keys($this->_select_options) : NULL;
+				return $this->_type == self::SELECT && (!$this->isSetInitialValue() || NULL === $value) && NULL !== $opts ? (string) reset($opts) : $value;
+		*/
 	}
 
 	/**
@@ -446,31 +469,38 @@ class Kohana_Form_Field {
 	/**
 	 * @param null $checked
 	 * @param null $unchecked
+	 *
 	 * @return Form_Field
 	 */
-	public function setCheckedValue($checked=NULL, $unchecked=NULL)
+	public function setCheckedValue($checked = NULL, $unchecked = NULL)
 	{
-		if ($this->_type === self::CHECKBOX) $this->_checked_value = NULL === $checked ? $this->default_checked_value : (string) $checked;
+		if ($this->_type === self::CHECKBOX) $this->_checked_value = NULL === $checked ? $this->default_checked_value
+			: (string) $checked;
+
 		return $this->setUnCheckedValue($unchecked);
 	}
 
 	/**
 	 * @param null $value
+	 *
 	 * @return Form_Field
 	 */
-	public function setUnCheckedValue($value=NULL)
+	public function setUnCheckedValue($value = NULL)
 	{
 		if ($this->_type === self::CHECKBOX) $this->_unchecked_value = NULL !== $value ? (string) $value : NULL;
+
 		return $this;
 	}
 
 	/**
 	 * @param null $data
+	 *
 	 * @return Form_Field
 	 */
-	public function setAttr($data=NULL)
+	public function setAttr($data = NULL)
 	{
 		$this->_attr = $data;
+
 		return $this;
 	}
 
@@ -484,19 +514,22 @@ class Kohana_Form_Field {
 
 	/**
 	 * @param null $value
+	 *
 	 * @return Form_Field
 	 */
-	public function setClass($value=NULL)
+	public function setClass($value = NULL)
 	{
 		$this->_class = $value;
+
 		return $this;
 	}
 
 	/**
 	 * @param null $addClass
+	 *
 	 * @return null|string
 	 */
-	public function getClass($addClass=NULL)
+	public function getClass($addClass = NULL)
 	{
 		$result = NULL;
 		if (!$this->isHidden()) {
@@ -506,16 +539,19 @@ class Kohana_Form_Field {
 			if (NULL !== $addClass) $result[] = $addClass;
 			$result = count($result) ? implode(' ', $result) : NULL;
 		}
+
 		return $result;
 	}
 
 	/**
 	 * @param null $value
+	 *
 	 * @return Form_Field
 	 */
-	public function setPlaceholder($value=NULL)
+	public function setPlaceholder($value = NULL)
 	{
 		$this->_placeholder = $value;
+
 		return $this;
 	}
 
@@ -529,17 +565,21 @@ class Kohana_Form_Field {
 			self::PASSWORD,
 			self::INPUT,
 			self::TEXTAREA,
-		))) $placeholder = NULL === $this->_placeholder ? $this->default_placeholder_text : $this->_placeholder;
+		))
+		) $placeholder = NULL === $this->_placeholder ? $this->default_placeholder_text : $this->_placeholder;
+
 		return $placeholder;
 	}
 
 	/**
 	 * @param null|array $data
+	 *
 	 * @return Form_Field
 	 */
-	public function setSelectOptions($data=NULL)
+	public function setSelectOptions($data = NULL)
 	{
 		$this->_select_options = $data;
+
 		return $this;
 	}
 
@@ -553,15 +593,16 @@ class Kohana_Form_Field {
 
 	/**
 	 * @param string|null $value
+	 *
 	 * @throws Kohana_Exception
 	 * @return Form_Field
 	 */
-	public function setValue($value=NULL)
+	public function setValue($value = NULL)
 	{
 		//$value = NULL === $value || is_array($value) || is_object($value) ? NULL : trim($value);
 		$value = is_string($value) ? trim($value) : $value;
 		if ($this->isStrictHidden() && $value != $this->_initial_value) {
-			throw new Kohana_Exception('Unable to redefine HIDDEN field [:key]', array(':key'=>$this->_name));
+			throw new Kohana_Exception('Unable to redefine HIDDEN field [:key]', array(':key' => $this->_name));
 		} elseif ($this->_type === self::CHECKBOX && NULL !== $this->_unchecked_value && NULL === $value) {
 			$value = $this->_unchecked_value;
 		} elseif ($this->_type === self::FILE) {
@@ -573,26 +614,31 @@ class Kohana_Form_Field {
 
 		$this->_value = $value;
 		$this->_is_dirty = $this->getValue() != $this->getInitialValue();
+
 		return $this;
 	}
 
 	/**
 	 * @param null $default
+	 *
 	 * @return mixed
 	 */
-	public function getValue($default=NULL)
+	public function getValue($default = NULL)
 	{
 		$value = NULL === $this->_value && $this->isSetInitialValue() ? $this->getInitialValue() : $this->_value;
+
 		return NULL === $value && NULL !== $default ? $default : $value;
 	}
 
 	/**
 	 * @param null|array $data
+	 *
 	 * @return Form_Field
 	 */
-	public function setRules($data=NULL)
+	public function setRules($data = NULL)
 	{
 		$this->_rules = !is_array($data) ? array() : $data;
+
 		return $this;
 	}
 
@@ -606,16 +652,18 @@ class Kohana_Form_Field {
 		if (is_array($this->_rules)) {
 			foreach ($this->_rules as $rule) $rules[] = $rule;
 		}
+
 		return $rules;
 	}
 
 
 	/**
-	 * @param $rule
+	 * @param      $rule
 	 * @param null $params
+	 *
 	 * @return Form_Field
 	 */
-	public function addRule($rule, $params=NULL)
+	public function addRule($rule, $params = NULL)
 	{
 		if (NULL === $params) $params = array();
 		elseif (!is_array($params)) $params = array($params);
@@ -626,6 +674,7 @@ class Kohana_Form_Field {
 			if (!is_array($this->_rules)) $this->_rules = array();
 			$this->_rules[] = $rule;
 		}
+
 		return $this;
 	}
 
@@ -639,20 +688,18 @@ class Kohana_Form_Field {
 		return $this->addRule('max_length', $value);
 	}
 
-	public function addRule_Password($min_length=6, $max_length=32)
+	public function addRule_Password($min_length = 6, $max_length = 32)
 	{
 		return $this
 			->addRule_MinLength($min_length)
-			->addRule_MaxLength($max_length)
-		;
+			->addRule_MaxLength($max_length);
 	}
 
-	public function addRule_Email($max_length=254)
+	public function addRule_Email($max_length = 254)
 	{
 		return $this
 			->addRule('email')
-			->addRule_MaxLength($max_length)
-		;
+			->addRule_MaxLength($max_length);
 	}
 
 	/**
@@ -668,26 +715,31 @@ class Kohana_Form_Field {
 	 */
 	public function isDirty()
 	{
-		return NULL !== $this->_is_dirty ? $this->_is_dirty : $this->_type !== self::FILE && $this->_value !== $this->_initial_value;
+		return NULL !== $this->_is_dirty ? $this->_is_dirty
+			: $this->_type !== self::FILE && $this->_value !== $this->_initial_value;
 	}
 
 	/**
 	 * @param $value
+	 *
 	 * @return $this
 	 */
 	public function setDirty($value)
 	{
 		$this->_is_dirty = (bool) $value;
+
 		return $this;
 	}
 
 	/**
 	 * @param $value
+	 *
 	 * @return $this
 	 */
 	public function setStrictHidden($value)
 	{
 		$this->_strict_hidden = (bool) $value;
+
 		return $this;
 	}
 
@@ -698,31 +750,36 @@ class Kohana_Form_Field {
 
 	/**
 	 * @param null $value
+	 *
 	 * @return $this|mixed
 	 */
-	public function prepend($value=NULL)
+	public function prepend($value = NULL)
 	{
 		if (func_num_args() == 0) return $this->_prepend;
 		$this->_prepend = $value;
+
 		return $this;
 	}
 
 	/**
 	 * @param null $value
+	 *
 	 * @return $this|mixed
 	 */
-	public function append($value=NULL)
+	public function append($value = NULL)
 	{
 		if (func_num_args() == 0) return $this->_append;
 		$this->_append = $value;
+
 		return $this;
 	}
 
 	/**
 	 * @param null $addClass
+	 *
 	 * @return null|string
 	 */
-	public function html($addClass=NULL)
+	public function html($addClass = NULL)
 	{
 		$attr = $this->getAttr();
 		$class = $this->getClass($addClass);
@@ -755,11 +812,13 @@ class Kohana_Form_Field {
 				$html = Form::checkbox($this->_name, $this->_checked_value, $this->_checked_value == $this->getValue(), $attr);
 				break;
 		}
+
 		return $html;
 	}
 
 	/**
 	 * @param bool $asHTML
+	 *
 	 * @return null|string|array
 	 */
 	protected function _label($asHTML)
@@ -767,10 +826,12 @@ class Kohana_Form_Field {
 		$labelText = $this->getLabelText();
 		if (NULL === $labelText) return NULL;
 
-		$required_before = ($this->getRequired() && $this->getRequiredPosition() === self::REQUIRED_BEFORE ? $this->getRequiredHTML(). $this->getRequiredDelim() : '');
-		$required_after = ($this->getRequired() && $this->getRequiredPosition() === self::REQUIRED_AFTER ? $this->getRequiredDelim() . $this->getRequiredHTML() : '');
+		$required_before = ($this->getRequired() && $this->getRequiredPosition() === self::REQUIRED_BEFORE
+			? $this->getRequiredHTML() . $this->getRequiredDelim() : '');
+		$required_after = ($this->getRequired() && $this->getRequiredPosition() === self::REQUIRED_AFTER
+			? $this->getRequiredDelim() . $this->getRequiredHTML() : '');
 		$text_full = trim($required_before . $labelText . $required_after);
-		$html = Form::label($this->getID(), $text_full , array('class' => $this->getLabelClass()));
+		$html = Form::label($this->getID(), $text_full, array('class' => $this->getLabelClass()));
 		if (!$asHTML) return array(
 			'text' => $labelText,
 			'text_full' => $text_full,
@@ -778,6 +839,7 @@ class Kohana_Form_Field {
 			'class' => $this->getLabelClass(),
 			'for' => $this->getID(),
 		);
+
 		return $html;
 	}
 
@@ -800,7 +862,8 @@ class Kohana_Form_Field {
 	/**
 	 * @return null|string
 	 */
-	public function __toString() {
+	public function __toString()
+	{
 		return $this->html();
 	}
 
@@ -810,18 +873,19 @@ class Kohana_Form_Field {
 		if (preg_match('@^addRule_(.+)$@', $name, $matches)) {
 			return $this->addRule(strtolower($matches[1]), $arguments);
 		}
-		throw new Kohana_Exception('Method [:method] does not exists', array(':method'=>$name));
+		throw new Kohana_Exception('Method [:method] does not exists', array(':method' => $name));
 	}
 
 	/**
-	 * @param $name
+	 * @param      $name
 	 * @param bool $required
 	 * @param null $label
 	 * @param null $max_size
 	 * @param null $allowed_ext
+	 *
 	 * @return Form_Field
 	 */
-	static function image($name, $required=FALSE, $label=NULL, $max_size=NULL, $allowed_ext=NULL)
+	static function image($name, $required = FALSE, $label = NULL, $max_size = NULL, $allowed_ext = NULL)
 	{
 		if (NULL === $max_size || NULL === $allowed_ext) {
 			$settingsMedia = (array) Kohana::$config->load('settings.media.images');
@@ -835,26 +899,29 @@ class Kohana_Form_Field {
 			->setRequired($required)
 			->addRule('Form_Field::validImage')
 			->addRule('Form_Field::validFileType', array($allowed_ext))
-			->addRule('Form_Field::validFileSize', $max_size)
-		;
+			->addRule('Form_Field::validFileSize', $max_size);
+
 		return $fieldImage;
 	}
 
 	static function validImage($data)
 	{
 		if (NULL === $data || !Upload::not_empty($data)) return TRUE;
+
 		return Upload::image($data);
 	}
 
-	static function validFileType($data, $allowed_ext=NULL)
+	static function validFileType($data, $allowed_ext = NULL)
 	{
 		if (NULL === $data || !Upload::not_empty($data)) return TRUE;
+
 		return NULL === $allowed_ext || Upload::type($data, $allowed_ext);
 	}
 
-	static function validFileSize($data, $max_size=NULL)
+	static function validFileSize($data, $max_size = NULL)
 	{
 		if (NULL === $data || !Upload::not_empty($data)) return TRUE;
+
 		return NULL === $max_size || Upload::size($data, $max_size);
 	}
 
@@ -866,8 +933,8 @@ class Kohana_Form_Field {
 	public function setIsNullable($value = TRUE)
 	{
 		$this->_not_nullable = !$value;
+
 		return $this;
 	}
-
 
 }
