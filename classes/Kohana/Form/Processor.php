@@ -26,7 +26,7 @@ class Kohana_Form_Processor
 	 */
 	static function factory($initalValues = NULL, $validationMessages = TRUE, array $fields = NULL)
 	{
-		return new static($initalValues, $validationMessages, $fields);
+		return new Form_Processor($initalValues, $validationMessages, $fields);
 	}
 
 	/**

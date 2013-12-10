@@ -84,7 +84,7 @@ class Kohana_Form_Field
 	 */
 	static function factory($name, array $data = NULL, $defaults = NULL)
 	{
-		return new static($name, $data, $defaults);
+		return new Form_Field($name, $data, $defaults);
 	}
 
 	function __construct($name, $data = NULL, $defaults = NULL)
