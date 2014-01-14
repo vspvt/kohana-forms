@@ -660,16 +660,18 @@ class Kohana_Form_Field
 	/**
 	 * @param      $rule
 	 * @param null $params
+	 * @param bool $valueFirst
 	 *
 	 * @return Form_Field
 	 */
-	public function addRule($rule, $params = NULL)
+	public function addRule($rule, $params = NULL, $valueFirst = TRUE)
 	{
 		if (NULL === $params) $params = array();
 		elseif (!is_array($params)) $params = array($params);
-		$params = Arr::merge(array(':value'), $params);
+		if ($valueFirst) $params = Arr::merge(array(':value'), $params);
 
 		if (is_string($rule)) $rule = Arr::merge(array($rule), array($params));
+		var_dump($rule);
 		if (is_array($rule)) {
 			if (!is_array($this->_rules)) $this->_rules = array();
 			$this->_rules[] = $rule;
