@@ -217,11 +217,15 @@ class Kohana_Form_Processor
 			$this->_validate($this->values(), $rulesCommon);
 			$this->_validate($_FILES, $rulesFILES);
 
+			// onSuccess
 			if (TRUE === $this->isValid() && isset($this->onSuccess)) {
 				call_user_func_array($this->onSuccess['closure'], $this->onSuccess['args']);
-			} elseif (FALSE === $this->isValid() && isset($this->onError)) {
+			}
+			// onError
+			if (FALSE === $this->isValid() && isset($this->onError)) {
 				call_user_func_array($this->onError['closure'], $this->onError['args']);
 			}
+
 		}
 
 		return $this;
