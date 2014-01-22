@@ -17,6 +17,9 @@ class Kohana_Form_Processor
 	protected $action;
 	protected $enctype;
 
+	protected $onError;
+	protected $onSuccess;
+
 	/**
 	 * @param null|array|ORM   $initalValues
 	 * @param null|bool|string $validationMessages
@@ -159,6 +162,42 @@ class Kohana_Form_Processor
 	}
 
 	/**
+	 * @param callable $closure
+	 * @param array    $args
+	 *
+	 * @return $this
+	 */
+	public function onError(Closure $closure = NULL, $args = [])
+	{
+		$this->onError = is_callable($closure)
+			? [
+					'closure' => $closure,
+					'args' => Helpers_Arr::asArray($args),
+				]
+			: NULL;
+
+		return $this;
+	}
+
+	/**
+	 * @param callable $closure
+	 * @param array    $args
+	 *
+	 * @return $this
+	 */
+	public function onSuccess(Closure $closure = NULL, $args = [])
+	{
+		$this->onSuccess = is_callable($closure)
+			? [
+					'closure' => $closure,
+					'args' => Helpers_Arr::asArray($args),
+				]
+			: NULL;
+
+		return $this;
+	}
+
+	/**
 	 * @param bool $forceValidation
 	 *
 	 * @return Form_Processor
@@ -177,6 +216,12 @@ class Kohana_Form_Processor
 			}
 			$this->_validate($this->values(), $rulesCommon);
 			$this->_validate($_FILES, $rulesFILES);
+
+			if (TRUE === $this->isValid() && isset($this->onSuccess)) {
+				call_user_func_array($this->onSuccess['closure'], $this->onSuccess['args']);
+			} elseif (FALSE === $this->isValid() && isset($this->onError)) {
+				call_user_func_array($this->onError['closure'], $this->onError['args']);
+			}
 		}
 
 		return $this;
