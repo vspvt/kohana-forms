@@ -171,9 +171,9 @@ class Kohana_Form_Processor
 	{
 		$this->onError = is_callable($closure)
 			? [
-					'closure' => $closure,
-					'args' => Helpers_Arr::asArray($args),
-				]
+				'closure' => $closure,
+				'args' => Helpers_Arr::merge([$this], $args),
+			]
 			: NULL;
 
 		return $this;
@@ -189,9 +189,9 @@ class Kohana_Form_Processor
 	{
 		$this->onSuccess = is_callable($closure)
 			? [
-					'closure' => $closure,
-					'args' => Helpers_Arr::asArray($args),
-				]
+				'closure' => $closure,
+				'args' => Helpers_Arr::merge([$this], $args),
+			]
 			: NULL;
 
 		return $this;
