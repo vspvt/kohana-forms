@@ -362,7 +362,7 @@ class Kohana_Form_Processor
 		$this->errors = array();
 		/** @var $field Form_Field */
 		foreach ($this->fields as $key => $field) {
-			if ($field->isError()) $this->errors[$key] = $field->getValue();
+			if ($field->isError()) $this->errors[$key] = $field->getError();
 		}
 
 		return $this->errors;

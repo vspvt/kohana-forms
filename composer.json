@@ -1,7 +1,7 @@
 {
 	"name":        "vspvt/kohana-forms",
 	"type":        "kohana-module",
-	"version":     "0.0.4.2",
+	"version":     "0.0.4.3",
 	"description": "Form procesing module for Kohana 3.3.1",
 	"homepage":    "https://github.com/vspvt/kohana-forms",
 	"license":     "MIT",
